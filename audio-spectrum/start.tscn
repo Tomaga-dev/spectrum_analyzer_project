@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://cnjgvps3m5dae"]
+
+[ext_resource type="PackedScene" uid="uid://bi0m2ex7olrs4" path="res://floor.tscn" id="1_4gcce"]
+[ext_resource type="Script" path="res://audio_stream_player.gd" id="2_0a6cy"]
+[ext_resource type="PackedScene" uid="uid://bn2hdlfdrkdlp" path="res://peak_indicator.tscn" id="3_mwtxv"]
+[ext_resource type="PackedScene" uid="uid://csvd7v08c1aq4" path="res://rectangle.tscn" id="4_eat0x"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xia7x"]
+sky_top_color = Color(0, 0.0462836, 0.1276, 1)
+sky_horizon_color = Color(2.40654e-07, 0.115896, 0.255668, 1)
+ground_bottom_color = Color(0, 0.0470588, 0.129412, 1)
+ground_horizon_color = Color(0, 0.117647, 0.254902, 1)
+
+[sub_resource type="Sky" id="Sky_invhw"]
+sky_material = SubResource("ProceduralSkyMaterial_xia7x")
+
+[sub_resource type="Environment" id="Environment_dq31n"]
+background_mode = 2
+sky = SubResource("Sky_invhw")
+glow_bloom = 1.0
+
+[node name="Start" type="Node"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." node_paths=PackedStringArray("camera", "timer", "info")]
+autoplay = true
+bus = &"Analyzer"
+script = ExtResource("2_0a6cy")
+camera = NodePath("../Camera3D")
+peak_indicator_scene = ExtResource("3_mwtxv")
+bar_scene = ExtResource("4_eat0x")
+timer = NodePath("../Timer")
+info = NodePath("../info")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dq31n")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+projection = 1
+fov = 30.0
+size = 12.5
+
+[node name="Floor" parent="." instance=ExtResource("1_4gcce")]
+
+[node name="info" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.844
+anchor_right = 0.5
+anchor_bottom = 0.844
+offset_left = -112.5
+offset_top = -25.912
+offset_right = 112.5
+offset_bottom = -2.91205
+grow_horizontal = 2
+grow_vertical = 0
+text = "Please drop a file (mp3) here."
+
+[connection signal="finished" from="AudioStreamPlayer" to="AudioStreamPlayer" method="_on_timer_timeout"]
+[connection signal="timeout" from="Timer" to="AudioStreamPlayer" method="_on_timer_timeout"]

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://csvd7v08c1aq4"]
+
+[ext_resource type="PackedScene" uid="uid://6je8tnh1eipd" path="res://Rectangle.glb" id="1_d4vnd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i6fp1"]
+albedo_color = Color(0.935746, 0.417727, 0, 1)
+
+[node name="Rectangle" instance=ExtResource("1_d4vnd")]
+
+[node name="Body" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_i6fp1")
